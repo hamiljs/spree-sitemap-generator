@@ -1,11 +1,10 @@
 module SpreeSitemapGenerator::SpreeDefaults
   include ActionView::Helpers
   include ActionDispatch::Routing
-  include Spree::Core::Engine.routes.url_helpers
   def default_url_options
     {:host => SitemapGenerator::Sitemap.default_host}
   end 
-  include ::Rails.application.routes.url_helpers
+  include Spree::Core::Engine.routes.url_helpers
 
   def add_login(options={})
     add(login_path, options)
@@ -24,7 +23,7 @@ module SpreeSitemapGenerator::SpreeDefaults
   end
 
   def add_products(options={})
-    active_products = Product.active
+    active_products = Spree::Product.active
 
     add(products_path, options.merge(:lastmod => active_products.last_updated))
     active_products.each do |product|
@@ -33,7 +32,7 @@ module SpreeSitemapGenerator::SpreeDefaults
   end 
 
   def add_taxons(options={})
-    Taxon.roots.each {|taxon| add_taxon(taxon, options) }
+    Spree::Taxon.roots.each {|taxon| add_taxon(taxon, options) }
   end
 
   def add_taxon(taxon, options={})
